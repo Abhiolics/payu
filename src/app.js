@@ -75,3 +75,20 @@ export function createApp(db, config) {
   app.use(errors);
   return app;
 }
+
+// Vercel Serverless entrypoint fallback
+let _app;
+export default function (req, res) {
+  if (!_app) {
+    import("./config.js").then(({ loadConfig }) => {
+      import("./db.js").then(({ createDb }) => {
+        const config = loadConfig();
+        const db = createDb(config.databaseUrl);
+        _app = createApp(db, config);
+        _app(req, res);
+      });
+    });
+  } else {
+    _app(req, res);
+  }
+}
