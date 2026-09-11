@@ -1,0 +1,35 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> pay-backend@1.0.0 test
+> node --test --test-concurrency=1 test/*.test.js
+
+✔ money rejects rounding, negative, zero, and scientific notation (4213.824905ms)
+✔ authentication, RBAC, and profile privilege escalation (53.464227ms)
+✔ catalog CRUD, validation, and soft deletion (51.14935ms)
+✔ deposit creation requires idempotency and validates file contents (55.820682ms)
+✔ private proof authorization and content disposition (16.077165ms)
+✔ deposit approval credits exactly once, conflicting review rejected (37.983517ms)
+✔ insufficient withdrawal rolls back, reserved funds cannot be spent twice (32.734795ms)
+✔ withdrawal rejection refunds once and requires reason (33.550666ms)
+✔ withdrawal approval requires bank transfer reference and does not debit twice (39.247638ms)
+✔ task reward is snapshotted, submission duplication prevented (48.193576ms)
+✔ gift limits, uniqueness and disabled/expired codes (37.870758ms)
+✔ wallet adjustment idempotency conflict and debit guard (25.976619ms)
+✔ ownership, pagination, search and notifications (40.077759ms)
+✔ maintenance blocks user mutations; admins can turn it off (17.836343ms)
+✔ registration, encrypted outbox, OTP verification, login and logout (177.768823ms)
+✔ blocking revokes sessions permanently, even after unblock (18.659829ms)
+✔ wallet ledger reconciles and refuses edits (5.146041ms)
+✔ health, dashboard, CORS and error envelopes (10.263308ms)
+﹣ concurrent withdrawals cannot overspend on a multi-connection PostgreSQL server (0.193428ms) # SKIP
+﹣ concurrent approvals credit once on PostgreSQL (0.068457ms) # SKIP
+✔ idempotency stores encrypted responses, including withdrawal bank details (0.887784ms)
+✔ every documented Postman request has a corresponding Express route (5.331594ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 2
+ℹ todo 0
+ℹ duration_ms 5261.846693

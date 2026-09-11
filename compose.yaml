@@ -1,0 +1,62 @@
+x-app: &app
+  build: .
+  init: true
+  env_file: .env
+  environment:
+    DATABASE_URL: postgres://pay:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@db:5432/pay
+    PORT: 5003
+    SMTP_HOST: ${SMTP_HOST:-mailpit}
+    SMTP_PORT: ${SMTP_PORT:-1025}
+  restart: unless-stopped
+services:
+  db:
+    image: postgres:18-bookworm
+    environment:
+      POSTGRES_USER: pay
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_DB: pay
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U pay -d pay"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+  migrate:
+    <<: *app
+    command: [npm, run, migrate]
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+  api:
+    <<: *app
+    ports: ["127.0.0.1:5003:5003"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        [
+          CMD,
+          node,
+          -e,
+          'fetch("http://127.0.0.1:5003/health/ready").then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))',
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+  worker:
+    <<: *app
+    command: [npm, run, worker]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+  mailpit:
+    image: axllent/mailpit:v1.27
+    profiles: [dev]
+    ports: ["127.0.0.1:8025:8025"]
+    restart: unless-stopped
+volumes:
+  postgres_data:

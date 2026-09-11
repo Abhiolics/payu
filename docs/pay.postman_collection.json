@@ -1,0 +1,1411 @@
+{
+  "info": {
+    "name": "Pay backend \u2014 sanitized and completed",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Set credentials and IDs before requests. No source credentials are included. Financial requests require an idempotency key: change it for each new action, preserve it for exact retries. All responses use success/data envelopes."
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "paylocal",
+      "value": "http://localhost:5003/api/"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "email",
+      "value": "user@example.test"
+    },
+    {
+      "key": "password",
+      "value": ""
+    },
+    {
+      "key": "otp",
+      "value": ""
+    },
+    {
+      "key": "idempotencyKey",
+      "value": "example-action-0001"
+    },
+    {
+      "key": "planId",
+      "value": ""
+    },
+    {
+      "key": "giftId",
+      "value": ""
+    },
+    {
+      "key": "taskId",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "depositId",
+      "value": ""
+    },
+    {
+      "key": "withdrawalId",
+      "value": ""
+    },
+    {
+      "key": "submissionId",
+      "value": ""
+    },
+    {
+      "key": "contactId",
+      "value": ""
+    },
+    {
+      "key": "notificationId",
+      "value": ""
+    },
+    {
+      "key": "fileId",
+      "value": ""
+    },
+    {
+      "key": "verificationToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "plan",
+      "item": [
+        {
+          "name": "admin tongle plans",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{paylocal}}admin/{{planId}}/toggle",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "get all plans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}plans/admin",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "create plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}plans/admin",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Gold\",\n  \"amount\": 1399,\n  \"description\": \"Example plan description\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.collectionVariables.set(\"planId\", pm.response.json().data.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "update plans",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}plans/admin/{{planId}}",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Gold\",\n  \"amount\": 1399,\n  \"description\": \"Unlimited transactions with cashback Membership benefits.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete plans",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{paylocal}}plans/admin/{{planId}}",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "toggelPlan",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{paylocal}}plans/admin/{{planId}}/toggle",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "list active plans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}plans",
+            "description": "Added to complete the backend flow. Access: User / admin. See API.md for response contracts."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "giftcode",
+      "item": [
+        {
+          "name": "get all gifts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}gift-codes/admin",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "create gifts",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}gift-codes/admin",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"FESTIVE50\",\n  \"rewardAmount\": 50,\n  \"maxUsers\": 200,\n  \"expiryDate\": \"2099-10-31T23:59:59.000Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.collectionVariables.set(\"giftId\", pm.response.json().data.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "update gift code",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}gift-codes/admin/{{giftId}}",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"FESTIVE40\",\n  \"rewardAmount\": 60,\n  \"maxUsers\": 500,\n  \"expiryDate\": \"2099-10-31T23:59:59.000Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete gift code",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{paylocal}}gift-codes/admin/{{giftId}}",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "toggelGiftCodes",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{paylocal}}gift-codes/admin/{{giftId}}/toggle",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "redeem gift code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}gift-codes/redeem",
+            "description": "Added to complete the backend flow. Access: User / admin. See API.md for response contracts. Set a new idempotencyKey for a new action; reuse it only for an identical retry.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"FESTIVE50\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "admin",
+      "item": [
+        {
+          "name": "Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}admin/dashboard",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "getUsers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}admin/users",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "getUserDetails",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}admin/users/{{userId}}",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "Block",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{paylocal}}admin/users/{{userId}}/block",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "unBlocked",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{paylocal}}admin/users/{{userId}}/unblock",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "activeUser",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{paylocal}}admin/users/{{userId}}/activate",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "deactivateUser",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{paylocal}}admin/users/{{userId}}/deactivate",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "audit log",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}admin/audit-logs",
+            "description": "Added to complete the backend flow. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}auth/register",
+            "description": "Derived from supplied collection. Access: Public. See API.md for response contracts.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Example User\",\n  \"phoneNumber\": \"9000000000\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "sendOtp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}auth/send-otp",
+            "description": "Derived from supplied collection. Access: Public. See API.md for response contracts.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "verifyOtp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}auth/verify-otp",
+            "description": "Derived from supplied collection. Access: Public. See API.md for response contracts.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"otp\": \"{{otp}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getMe",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}auth/me",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "updateProfile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}auth/update-profile",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Example User\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "verify_email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}auth/verify-email/{{verificationToken}}",
+            "description": "Derived from supplied collection. Access: Public. See API.md for response contracts.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}auth/login",
+            "description": "Added to complete the backend flow. Access: Public. See API.md for response contracts.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) pm.collectionVariables.set(\"token\", pm.response.json().data.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{paylocal}}auth/logout",
+            "description": "Added to complete the backend flow. Access: User / admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "change password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}auth/password",
+            "description": "Added to complete the backend flow. Access: User / admin. See API.md for response contracts.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"{{password}}\",\n  \"newPassword\": \"ReplaceWithANewPassword!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "notification",
+      "item": [
+        {
+          "name": "getNotifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}notifications",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "getUnreadCount",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}notifications/unread-count",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "markAllRead",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{paylocal}}notifications/read-all",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "markRead",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{paylocal}}notifications/{{notificationId}}/read",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "deposit",
+      "item": [
+        {
+          "name": "adminApproved",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}deposits/admin/{{depositId}}/approve",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts. Set a new idempotencyKey for a new action; reuse it only for an identical retry.",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "adminReject",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}deposits/admin/{{depositId}}/reject",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts. Set a new idempotencyKey for a new action; reuse it only for an identical retry.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Payment evidence could not be verified\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "userCreateDeposit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKey}}"
+              }
+            ],
+            "url": "{{paylocal}}deposits",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts. Set a new idempotencyKey for a new action; reuse it only for an identical retry.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "planId",
+                  "type": "text",
+                  "value": "{{planId}}"
+                },
+                {
+                  "key": "transactionRef",
+                  "type": "text",
+                  "value": "TXN123456756"
+                },
+                {
+                  "key": "amount",
+                  "type": "text",
+                  "value": "4000"
+                },
+                {
+                  "key": "paymentProof",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.collectionVariables.set(\"depositId\", pm.response.json().data.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "getAllDeposits",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}deposits/admin",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "getUserDeposit",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}deposits",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "setings",
+      "item": [
+        {
+          "name": "getPublicSettings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}app/settings",
+            "description": "Derived from supplied collection. Access: Public. See API.md for response contracts.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getPaymentMethod",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}payment-methods",
+            "description": "Derived from supplied collection. Access: Public. See API.md for response contracts.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getContacts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}contacts",
+            "description": "Derived from supplied collection. Access: Public. See API.md for response contracts.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getSettings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}admin/settings",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "updateMentenance",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}admin/settings/maintenance",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"maintenanceMode\": true,\n  \"maintenanceMessage\": \"The system is currently under maintenance. Please try again later.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateAppControll",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}admin/settings/update-control",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"forceUpdate\": true,\n  \"updateMessage\": \"A new version of the app is available. Please update to continue using the application.\",\n  \"currentVersion\": \"2.1.0\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updatePaymentMethods",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}admin/settings/payment",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"qrCode\": {\n    \"enabled\": true,\n    \"imageUrl\": \"https://example.com/uploads/qr-code.png\"\n  },\n  \"bankAccount\": {\n    \"enabled\": true,\n    \"accountHolder\": \"Example Account Holder\",\n    \"bankName\": \"State Bank of India\",\n    \"accountNumber\": \"123456789012\",\n    \"ifscCode\": \"SBIN0001234\",\n    \"upiId\": \"example@upi\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "addContacts",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}admin/contacts",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"support\",\n  \"label\": \"Help Center\",\n  \"value\": \"https://example.com/support\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.collectionVariables.set(\"contactId\", pm.response.json().data.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "updateContact",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}admin/contacts/{{contactId}}",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"whatsapp\",\n  \"label\": \"WhatsApp Support urgent\",\n  \"value\": \"9000000000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteContact",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{paylocal}}admin/contacts/{{contactId}}",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "admin list contacts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}admin/contacts",
+            "description": "Added to complete the backend flow. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "toggle contact",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{paylocal}}admin/contacts/{{contactId}}/toggle",
+            "description": "Added to complete the backend flow. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "withdrawal",
+      "item": [
+        {
+          "name": "createWithdrawal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}withdrawals",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts. Set a new idempotencyKey for a new action; reuse it only for an identical retry.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 5,\n  \"bankDetails\": {\n    \"accountHolderName\": \"Example Account Holder\",\n    \"bankName\": \"State Bank of India\",\n    \"accountNumber\": \"123456789012\",\n    \"ifscCode\": \"SBIN0001234\",\n    \"upiId\": \"example@upi\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.collectionVariables.set(\"withdrawalId\", pm.response.json().data.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "getUserWithdrawals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}withdrawals",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "getAllWithdrawals admin",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}withdrawals/admin",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "adminApproveWithdrawal",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}withdrawals/admin/{{withdrawalId}}/approve",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts. Set a new idempotencyKey for a new action; reuse it only for an identical retry.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payoutRef\": \"BANK-REFERENCE-0001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "rejectWithdrawal admin",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}withdrawals/admin/{{withdrawalId}}/reject",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts. Set a new idempotencyKey for a new action; reuse it only for an identical retry.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Payment evidence could not be verified\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "tasks",
+      "item": [
+        {
+          "name": "userGetTask",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}tasks",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "userSubmitTask",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKey}}"
+              }
+            ],
+            "url": "{{paylocal}}tasks/{{taskId}}/submit",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts. Set a new idempotencyKey for a new action; reuse it only for an identical retry.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "proof",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.collectionVariables.set(\"submissionId\", pm.response.json().data.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "getUserSubmissions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}tasks/submissions",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "createTask",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}tasks/admin",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Complete Profile\",\n  \"description\": \"Fill out all profile information including name, email, and phone number.\",\n  \"rewardAmount\": 25\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.collectionVariables.set(\"taskId\", pm.response.json().data.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "updateTask",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}tasks/admin/{{taskId}}",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Complete Profile blog\",\n  \"description\": \"Fill out all profile information including name, email, and phone number email id.\",\n  \"rewardAmount\": 30\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteTask",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{paylocal}}tasks/admin/{{taskId}}",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "toggleTask",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{paylocal}}tasks/admin/{{taskId}}/toggle",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "getAllSubmissions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}tasks/admin/submissions",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "approveSubmission",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}tasks/admin/submissions/{{submissionId}}/approve",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts. Set a new idempotencyKey for a new action; reuse it only for an identical retry.",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "rejectSubmission",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}tasks/admin/submissions/{{submissionId}}/reject",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts. Set a new idempotencyKey for a new action; reuse it only for an identical retry.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Payment evidence could not be verified\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "adminGetAllTasks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}tasks/admin",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "wallet",
+      "item": [
+        {
+          "name": "getTransactions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}wallet/transactions",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts."
+          },
+          "response": []
+        },
+        {
+          "name": "adminAdjustWallet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{paylocal}}wallet/admin/adjust",
+            "description": "Derived from supplied collection. Access: Admin. See API.md for response contracts. Set a new idempotencyKey for a new action; reuse it only for an identical retry.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"amount\": 3000,\n  \"type\": \"credit\",\n  \"description\": \"Referral bonus added by admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getWallet",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}wallet",
+            "description": "Derived from supplied collection. Access: User / admin. See API.md for response contracts."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "files",
+      "item": [
+        {
+          "name": "download proof",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{paylocal}}files/{{fileId}}",
+            "description": "Added to complete the backend flow. Access: User / admin. See API.md for response contracts."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
